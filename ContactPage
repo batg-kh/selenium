@@ -1,0 +1,87 @@
+package com.freecrm.testcases;
+
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.freecrm.base.TestBase;
+import com.freecrm.util.TestUtils;
+
+import atu.testrecorder.ATUTestRecorder;
+import atu.testrecorder.exceptions.ATUTestRecorderException;
+
+public class ContactPageTest extends TestBase {
+
+	public ContactPageTest() throws IOException {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	 @Parameters({"browser"})
+		@BeforeMethod
+		
+		public void Login( String browser , Method method) throws ATUTestRecorderException {
+			logger = extent.startTest(method.getName());
+			init(browser);
+			recorder = new ATUTestRecorder ("C:\\Users\\HAMZEH\\eclipse-workspace\\FreeCRMApplication.currect\\testRecorder", method.getName(), false);
+			recorder.start();
+			 driver.manage().window().maximize();
+			 driver.manage().timeouts().implicitlyWait(90, TimeUnit.SECONDS);
+	         
+		        WebElement userName = driver.findElement(By.name("email"));
+		        userName.sendKeys(prop.getProperty("email"));
+				WebElement password = driver.findElement(By.name("password"));
+				password.sendKeys(prop.getProperty("password"));
+				
+				WebElement login = driver.findElement(By.xpath("//div[@class='ui fluid large blue submit button']"));
+				login.click();
+		}
+	 
+	 
+	 
+	 
+	 @Test (dataProvider="dataFromExcel")
+	 public void ContactTest(String Fname , String Lname , String Mname)  {
+			WebElement contacts = driver.findElement(By.xpath("//span[text()='Contacts']"));
+			contacts.click();
+			WebElement contact = driver.findElement(By.xpath("//body/div[@id='ui']/div[1]/div[2]/div[2]/div[1]/div[1]/div[2]/div[1]/a[1]/button[1]"));
+			contact.click();
+			driver.navigate().refresh();
+			
+			WebElement firstName = driver.findElement(By.name("first_name"));
+			firstName.sendKeys(Fname);
+			WebElement lastname = driver.findElement(By.name("last_name"));
+			lastname.sendKeys(Lname);
+			WebElement middlename = driver.findElement(By.name("middle_name"));
+			middlename.sendKeys(Mname);
+			
+			WebElement save = driver.findElement(By.xpath("//body/div[@id='ui']/div[1]/div[2]/div[2]/div[1]/div[1]/div[2]/div[1]/button[2]"));
+			save.click();
+			
+	 }
+			@AfterMethod
+
+	 public void after (Method method) throws ATUTestRecorderException, IOException {
+	 	recorder.stop();
+	 	TestUtils.takePic(method.getName());
+	 	//driver.quit();
+	 }
+	
+			@DataProvider
+			
+			public Object dataFromExcel () throws IOException {
+				Object data = TestUtils.getExcelSheetData("Sheet1");
+				return data ; 
+				
+			}
+			
+			
+
+}
