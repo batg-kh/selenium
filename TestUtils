@@ -1,0 +1,46 @@
+package com.freecrm.util;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+
+import com.freecrm.base.TestBase;
+
+public class TestUtils extends TestBase{
+
+	public TestUtils() throws IOException {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	public static void takePic(String name) throws IOException {
+		 File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+		 FileUtils.copyFile(scrFile, new File("C:\\Users\\HAMZEH\\eclipse-workspace\\FreeCRMapplication\\SnapShots\\ClickOnDealsTest.png"+name+".png"));
+
+	}
+	public static Object[][] getExcelSheetData(String SheetName) throws IOException {
+		File file = new File("C:\\Users\\HAMZEH\\Downloads\\Contact.xlsx");
+		FileInputStream fis = new FileInputStream(file);
+		XSSFWorkbook  workbook = new XSSFWorkbook(fis);
+		Sheet sheet = workbook.getSheet(SheetName);
+		
+		int row = sheet.getLastRowNum();
+		int column = sheet.getRow(0).getLastCellNum();
+		Object data[][] = new Object [row][column];
+
+		for (int i = 0 ; i<row ; i++) {
+			for (int k = 0 ; k<column ; k++) {
+				data [i][k]=sheet.getRow(i).getCell(k).toString();
+			}
+		}
+		return data;
+
+	}
+
+}
