@@ -1,0 +1,53 @@
+package com.freecrm.base;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+
+import com.freecrm.util.WebDriverListeners;
+import com.relevantcodes.extentreports.ExtentReports;
+import com.relevantcodes.extentreports.ExtentTest;
+
+import atu.testrecorder.ATUTestRecorder;
+
+public class TestBase {
+public static	WebDriver driver ;
+public static Properties prop ;
+public static EventFiringWebDriver e_driver;
+public static WebDriverListeners webListener; 
+public static ATUTestRecorder recorder;
+public static ExtentReports extent;
+public static ExtentTest logger;
+
+public TestBase() throws IOException {
+	 prop = new Properties();
+	FileInputStream fis = new FileInputStream("C:\\Users\\HAMZEH\\eclipse-workspace\\FreeCRMapplication\\src\\com\\freecrm\\config\\config.properties");
+	prop.load(fis);
+}
+ 
+	public void init(String browser) {
+		
+		if (browser.equalsIgnoreCase("chrome")){
+		System.setProperty("webdriver.chrome.driver", "C:\\Users\\HAMZEH\\Desktop\\chromedriver\\chromedriver.exe");
+        driver = new ChromeDriver();
+        }
+		
+		else if (browser.equalsIgnoreCase("firefox")){
+			
+			System.setProperty("webdriver.gecko.driver", "C:\\Users\\HAMZEH\\Desktop\\FireFoxDriver\\geckodriver.exe");
+	         driver = new FirefoxDriver();
+		}
+		
+        e_driver=new EventFiringWebDriver (driver);
+        webListener = new WebDriverListeners();
+        e_driver.register(webListener);
+        driver = e_driver ;
+		 driver.get(prop.getProperty("URL"));
+	}
+}
