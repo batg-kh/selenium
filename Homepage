@@ -1,0 +1,100 @@
+package com.freecrm.testcases;
+
+
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+
+import org.openqa.selenium.WebElement;
+import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.freecrm.base.TestBase;
+import com.freecrm.util.TestUtils;
+
+import atu.testrecorder.ATUTestRecorder;
+import atu.testrecorder.exceptions.ATUTestRecorderException;
+
+public class HomePage extends TestBase {
+	
+	
+   
+	public HomePage() throws IOException {
+		super();
+		
+	}
+    @Parameters({"browser"})
+	@BeforeMethod
+	
+
+	public void Login( String browser , Method method) throws ATUTestRecorderException {
+    	logger = extent.startTest(method.getName());
+		init(browser);
+		recorder = new ATUTestRecorder ("C:\\Users\\HAMZEH\\eclipse-workspace\\FreeCRMapplication\\testRecorder", method.getName(), false);
+		recorder.start();
+		 driver.manage().window().maximize();
+		 driver.manage().timeouts().implicitlyWait(90, TimeUnit.SECONDS);
+         
+	        WebElement userName = driver.findElement(By.name("email"));
+	        userName.sendKeys(prop.getProperty("email"));
+			WebElement password = driver.findElement(By.name("password"));
+			password.sendKeys(prop.getProperty("password"));
+			
+			WebElement login = driver.findElement(By.xpath("//div[@class='ui fluid large blue submit button']"));
+			login.click();
+	}
+	
+	@Test(priority=5 )
+	
+	public void ClickOnContactTest()  {
+	WebElement contants = driver.findElement(By.xpath("//span[text()='Contacts']"));
+	contants.click();
+	WebElement status =driver.findElement(By.xpath("//th[text()='Status']"));
+	boolean Actual = status.isDisplayed();
+	Assert.assertTrue(Actual, "Status isn't displayed" );
+
+
+	
+	}
+	
+@Test(priority=6)
+	
+	public void ClickOnDealsTest()  {
+	WebElement Deals = driver.findElement(By.xpath("//span[text()='Deals']"));
+	Deals.click();
+	WebElement Amount =driver.findElement(By.xpath("//th[text()='Amount']"));
+	boolean Actual = Amount.isDisplayed();
+	Assert.assertTrue(Actual, "Amount for deal isn't displayed" );
+	
+	
+	}
+
+@Test(priority=7)
+
+public void ClickOnTasksTest()  {
+WebElement Tasks = driver.findElement(By.xpath("//span[text()='Tasks']"));
+Tasks.click();
+WebElement Title =driver.findElement(By.xpath("//th[text()='Title']"));
+boolean Actual = Title.isDisplayed();
+Assert.assertTrue(Actual, "Amount for deal isn't displayed" );
+
+
+}
+
+@AfterMethod
+
+public void after (Method method) throws ATUTestRecorderException, IOException {
+	recorder.stop();
+	TestUtils.takePic(method.getName());
+   driver.quit();
+}
+
+
+
+}
