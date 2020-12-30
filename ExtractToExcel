@@ -1,0 +1,34 @@
+package com.freecrm.testcases;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+public class ExtractToExcel {
+
+	public static void main(String[] args) throws IOException {
+	 
+		File file = new File("C:\\Users\\HAMZEH\\Downloads\\Contact.xlsx");
+		FileInputStream fis = new FileInputStream(file);
+		XSSFWorkbook  workbook = new XSSFWorkbook(fis);
+		Sheet sheet = workbook.getSheet("Sheet1");
+	
+		int row = sheet.getLastRowNum();
+		int column = sheet.getRow(0).getLastCellNum();
+		Object data[][] = new Object [row][column];
+
+		for (int i=0 ; i<row ; i++) {
+			for (int k=0 ; k<column ; k++) {
+				data [i][k]=sheet.getRow(i).getCell(k);
+			}
+		}
+		System.out.println(data[1][1]);
+		
+	}
+	
+
+}
